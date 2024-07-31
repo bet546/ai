@@ -1,88 +1,139 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9617191770288474"
-     crossorigin="anonymous"></script>
-	 
-	 <meta name="google-adsense-account" content="ca-pub-9617191770288474">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BET A.I</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-color: green;
+        }
 
+        h1 {
+            color: #FFFFFF; /* White */
+        }
 
+        label {
+            display: block;
+            margin: 10px 0;
+            color: #FFFFFF; /* White */
+        }
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BET</title>
-  <style>
-    body {
-      background-color: white; /* Set background color to white */
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-	  
-	
-	  
-	  
-	  
-    }
-    .container {
-      max-width: 800px;
-      margin: 50px auto;
-      text-align: center;
-      display: flex;
-      flex-direction: column; /* Align items vertically */
-      align-items: center; /* Center items horizontally */
-    }
-    button {
-      padding: 10px 150px; /* Adjusted padding */
-      font-size: 20px; /* Increased font size */
-      margin: 10px;
-      cursor: pointer;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-      white-space: nowrap; /* Prevent text wrapping */
-      overflow: hidden; /* Hide overflow text */
-      text-overflow: ellipsis; /* Show ellipsis (...) for overflow text */
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    footer {
-      background-color: black;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-	
-	
+        input {
+            padding: 8px;
+            margin-bottom: 10px;
+            width: 200px;
+        }
 
-  .blog-title {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-  }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-  </style>
+        button {
+            padding: 10px;
+            background-color: #4CAF50; /* Green */
+            color: #FFFFFF; /* White */
+            border: none;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #555; /* Grey */
+            cursor: not-allowed;
+        }
+
+        h2 {
+            margin-top: 20px;
+            color: #FFFFFF; /* White */
+        }
+
+        footer {
+            background-color: black;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    
-   <p><b><a href='https://youtu.be/FbCsT3c91us '>CLICK HERE TO WATCH HOW TO INSTALL THE BOOKING ROAD APP FOR FREE </a></b></p>
-   
-	<P></P>
-	  <P><b>THE "BOOKING ROAD" GIVES FIXED GAMES IN BRAZIL AND CHINA LEAGUES FOR FREE <br> THE BOOKING ROAD APP GIVES 20 BET ODDS EVERYDAY FOR FREE</b></P>
-  
+    <h1>Enter Two Teams Playing And Get Bet Odds</h1>
+
+    <label for="team1">Enter Team 1:</label>
+    <input type="text" id="team1" placeholder="Team 1">
+
+    <br>
+
+    <label for="team2">Enter Team 2:</label>
+    <input type="text" id="team2" placeholder="Team 2">
+
+    <br>
+
+    <button onclick="suggestOutcome()">ROBOT BET ODDS</button>
+
+    <br>
+
+    <b id="result"></b>
+
+    <script>
+        async function fetchHeadToHead(team1, team2) {
+            const apiKey = '5ba41e30cfmshdbb4fef17899cb9p14f6e1jsn39e939b58d4f'; // Replace with your actual API key
+            const url = `https://api-football-v1.p.rapidapi.com/v2/odds/league/865927/bookmaker/5?page=2`;
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': apiKey,
+                    'x-rapidapi-host': 'api-football-v1.p.rapidapi.com'
+                }
+            });
+
+            if (response.ok) {
+                return await response.json();
+            } else {
+                throw new Error('Failed to fetch data');
+            }
+        }
+
+        async function suggestOutcome() {
+            var team1 = document.getElementById("team1").value;
+            var team2 = document.getElementById("team2").value;
+
+            if (team1.trim() === "" || team2.trim() === "") {
+                alert("Please enter both teams");
+                return;
+            }
+
+            try {
+                const data = await fetchHeadToHead(team1, team2);
+
+                var outcomes = ["HOME OR AWAY", " OVER 1.5", "OVER 8.5 CORNERS"];
+                var randomIndex = Math.floor(Math.random() * outcomes.length);
+                var suggestedOutcome = outcomes[randomIndex];
+
+                var result = `
+                    BET ODDS: ${suggestedOutcome}<br>
+                    <p><a href='https://bet32.github.io/live/'>CLICK HERE TO CHECK ANOTHER MATCH</a></p>
+                    <p><a href='https://youtu.be/j0EdkyOEDFc'>CLICK HERE TO WATCH AND GET BOOKING CODE FOR TODAY</a></p>
+                    <p>Head to Head Statistics:</p>
+                    <p>${team1} vs ${team2}</p>
+                    <p>Wins: ${data.api.results.wins[team1]} - ${data.api.results.wins[team2]}</p>
+                    <p>Draws: ${data.api.results.draws}</p>
+                    <p>Goals: ${data.api.results.goals[team1]} - ${data.api.results.goals[team2]}</p>
+                `;
+
+                document.getElementById("result").innerHTML = result;
+
+                // Disable the button after it is clicked
+                document.querySelector('button').disabled = true;
+            } catch (error) {
+                alert('Error fetching data: ' + error.message);
+            }
+        }
+    </script>
+
+    <footer>
+        <p>EMAIL: newsandgame2021@gmail.com</p>
+        <p>SERVICE: FOOTBALL ARTIFICIAL INTELLIGENCE</p>
+        <p>ABOUT US: BET-ROBOT IS AN ONLINE TECHNOLOGY COMPANY<br>THAT BUILDS FOOTBALL ARTIFICIAL INTELLIGENCE</p>
+    </footer>
 </body>
 </html>
